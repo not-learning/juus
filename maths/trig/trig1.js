@@ -1,7 +1,6 @@
 let a1 = 0, a2 = 0, r = 120
-arc(0, 0, r, a1, a2).stroke('mediumspringgreen')
 const anim = () => {
-  arc.gPlot(0, 0, r, a1, a2)
+  arc(0, 0, r, a1, a2).stroke('mediumspringgreen')
   a2 += 0.05, r -= 1
   if (a2 <= 2*Math.PI ) { window.requestAnimationFrame(anim) }
 }
