@@ -1,0 +1,8 @@
+body {
+	color: white;
+	background-color: black;
+}
+a:link { color: dodgerblue; }
+a:visited {color: violet;}
+a:hover { color: lightblue; }
+a:active { color: lightblue; }
