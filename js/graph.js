@@ -1,37 +1,44 @@
 const gScale = 120
 
-SVG.Shape.gx = 0
-SVG.Shape.gy = 0
-SVG.Shape.gcx = 0
-SVG.Shape.gcy = 0
-SVG.Shape.gw = 0
-SVG.Shape.gh = 0
-SVG.Shape.gr = 0
-
-SVG.Line.gx1 = 0
-SVG.Line.gy1 = 0
-SVG.Line.gx2 = 0
-SVG.Line.gy2 = 0
-
 const gXY = (x, y) => {
-  return {
-    x: (1 + x/gScale) * scrW/2,
-    ...(typeof y !== 'undefined' && {
-      y: (1 - y/gScale) * scrH/2
-    }),
+  if (typeof y !== 'undefined') {
+    return [
+      (1 + x / gScale) * scrW / 2,
+      (1 - y / gScale) * scrH / 2,
+    ]
   }
+  return (1 + x / gScale) * scrW / 2
 }
 
 const gWH = (w, h) => {
-  return {
-    w: w/gScale * scrW/2,
-    ...(typeof h !== 'undefined' && {
-      h: h/gScale * scrH/2
-    }),
+  if (typeof h !== 'undefined') {
+    return [
+      w / gScale * scrW / 2,
+      h / gScale * scrH / 2,
+    ]
   }
+  return w / gScale * scrW / 2
 }
 
-SVG.extend(SVG.Shape, {
+/*const gXY = (x, y) => {
+  return [
+    (1 + x/gScale) * scrW/2,
+    ...(typeof y !== 'undefined'
+      ? [(1 - y/gScale) * scrH/2]
+      : []),
+  ]
+}*/
+
+/*const gWH = (w, h) => {
+  return [
+    w/gScale * scrW/2,
+    ...(typeof h !== 'undefined'
+      ? [h/gScale * scrH/2]
+      : []),
+  ]
+}*/
+
+/*SVG.extend(SVG.Shape, {
   gMove: function(gx = this.gx, gy = this.gy) {
     this.gx = gx, this.gy = gy
     let crds = gXY(gx, gy)
@@ -84,7 +91,7 @@ SVG.extend(SVG.Line, {
       gx2: p2.x, gy2: p2.y,
     })
   },
-})
+})*/
 
 /*SVG.extend(SVG.Container, {
   gMove: function(x, y) {
