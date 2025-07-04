@@ -1,13 +1,35 @@
-const gArrow = (x1, y1, x2, y2) => {
-  return draw.line()
-    .plot(...gXY(x1, y1), ...gXY(x2, y2))
-    .marker('end', 26, 10, function(add) {
-      add.path('m 0, 2 l 13, 3 l -13, 3')
-        .stroke({width: 1})
-        .stroke('context-stroke')
-        //.fill('context-stroke')
-    })
-}
+const gArrow = (x1, y1, x2, y2) =>
+  draw.line()
+  .plot(...gXY(x1, y1), ...gXY(x2, y2))
+  .marker('end', 26, 10, function(add) {
+    add.path('m 0, 2 l 13, 3 l -13, 3')
+      .stroke({width: 1})
+      .stroke('context-stroke')
+      //.fill('context-stroke')
+  })
+
+// const tickH = (x, y, s) =>
+//   draw.line(0, 0, s, 0)
+//   .center(x, y)
+//   .stroke('dodgerblue')
+
+// const tickV = (x, y, s) =>
+//   draw.line(0, 0, 0, s)
+//   .center(x, y)
+//   .stroke('dodgerblue')
+
+// for (i = -10; i < 11; i++) {
+//   tickH(...gXY(0, 10*i), gWH(5))
+//   tickV(...gXY(10*i, 0), gWH(5))
+//   if (i % 5 === 0) {
+//     tickH(...gXY(0, 10*i), gWH(10))
+//     tickV(...gXY(10*i, 0), gWH(10))
+//   }
+// }
+
+// draw.text('0.5').center(...gXY(50, -10)).fill('white')
+
+// const tickL = (x, y, label) => 
 
 const gPlane = () => {
   let ll = new SVG.List()
