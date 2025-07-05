@@ -1,58 +1,37 @@
-const gArrow = (x1, y1, x2, y2) =>
-  draw.line()
-  .plot(...gXY(x1, y1), ...gXY(x2, y2))
+const arrow = (x1, y1, x2, y2) => {
+  return draw.line()
+  .plot(x1, y1, x2, y2)
   .marker('end', 26, 10, function(add) {
     add.path('m 0, 2 l 13, 3 l -13, 3')
       .stroke({width: 1})
       .stroke('context-stroke')
       //.fill('context-stroke')
   })
-
-// const tickH = (x, y, s) =>
-//   draw.line(0, 0, s, 0)
-//   .center(x, y)
-//   .stroke('dodgerblue')
-
-// const tickV = (x, y, s) =>
-//   draw.line(0, 0, 0, s)
-//   .center(x, y)
-//   .stroke('dodgerblue')
-
-// for (i = -10; i < 11; i++) {
-//   tickH(...gXY(0, 10*i), gWH(5))
-//   tickV(...gXY(10*i, 0), gWH(5))
-//   if (i % 5 === 0) {
-//     tickH(...gXY(0, 10*i), gWH(10))
-//     tickV(...gXY(10*i, 0), gWH(10))
-//   }
-// }
-
-// draw.text('0.5').center(...gXY(50, -10)).fill('white')
-
-// const tickL = (x, y, label) => 
-
-const gPlane = () => {
-  let ll = new SVG.List()
-  ll.push(
-    gArrow(-115, 0, 115, 0)
-      .stroke('dodgerblue'),
-    gArrow(0, -115, 0, 115)
-      .stroke('dodgerblue'),
-  )
-  return ll
 }
 
-const spinXY = (cx, cy, r, a) => {
-  return [
+const coordPlane = () => new SVG.List([
+  arrow(-115, 0, 115, 0),
+  arrow(0, -115, 0, 115),
+])
+
+const label = (text, x, y) =>
+  draw.text(text).center(x, y).scale(1, -1)
+
+const axesLabels = () => new SVG.List([
+  label('x', 112, -7),
+  label('y', 7, 112),
+  label('0', 6, -6),
+]).each(i => i.fill('white'))
+
+const spinXY = (cx, cy, r, a) => [
     Math.cos(a) * r + cx,
     Math.sin(a) * r + cy,
-  ]
-}
+]
 
-const gDot = (x, y) => draw.circle(7).center(x, y)
+const dot = (x, y) => draw.circle(2).center(x, y)
 
 const arcPath = (cx, cy, r, a1, a2) => {
-  const dif = Math.sin((a2 - a1) % (4 * Math.PI) / 2)
+  const dif = -Math.sin((a2 - a1) % (4 * Math.PI) / 2)
   let am, p1, p2, p3
 
   am = (a1 + a2) / 2
@@ -63,9 +42,7 @@ const arcPath = (cx, cy, r, a1, a2) => {
 
   return new SVG.PathArray([
     ['M', ...p1],
-    ['A', r, r, 0, 0, 0, ...p2],
-    ['A', r, r, 0, 0, 0, ...p3],
+    ['A', r, r, 0, 0, 1, ...p2],
+    ['A', r, r, 0, 0, 1, ...p3],
   ])
 }
-
-const gArcPath = (cx, cy, r, a1, a2) => arcPath(...gXY(cx, cy), gWH(r), -a1, -a2)
