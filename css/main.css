@@ -9,20 +9,21 @@ body {
 }
 	@font-face {
     font-family: 'JuliaMono';
-    src: url('fonts/JuliaMono-Light.woff2') format('woff2'),
+	src: url('fonts/JuliaMono-Light.woff2') format('woff2'),
         url('fonts/JuliaMono-Light.woff') format('woff'),
         url('fonts/JuliaMono-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
+	font-weight: 300;
+	font-style: normal;
 }
 	@font-face {
     font-family: 'DejaVu Serif';
-    src: url('DejaVuSerif.woff2') format('woff2'),
+	src: url('DejaVuSerif.woff2') format('woff2'),
         url('DejaVuSerif.woff') format('woff'),
         url('DejaVuSerif.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}erif
+	font-weight: normal;
+	font-style: normal;
+}
+	;
 	color: white;
 	background-color: #000000;
 }

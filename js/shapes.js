@@ -9,10 +9,47 @@ const arrow = (x1, y1, x2, y2) => {
   })
 }
 
-const coordPlane = () => new SVG.List([
-  arrow(-115, 0, 115, 0),
-  arrow(0, -115, 0, 115),
+const coordAxes = (cx = 0, cy = 0) => new SVG.List([
+  arrow(-115, cy, 115, cy),
+  arrow(cx, -115, cx, 115),
 ])
+
+SVG.extend(SVG.List, {
+  centerAxes: function(x, y) {
+    this[0].center(0, y)
+    this[1].center(x, 0)
+    return this
+  }
+})
+
+SVG.extend(SVG.G, {
+  centerPlane: function(cx = 0, cy = 0, scale = 1) {
+    const clipRect = this.clipper().children()[0]
+    this.matrix(1, 0, 0, 1, 0, 0)
+      .center(0, 0)
+    clipRect.matrix(1, 0, 0, 1, 0, 0)
+      .center(0, 0)
+    this.scale(1 / scale)
+      .stroke({width: 0.5 * scale})
+    clipRect.scale(scale)
+    this.center(cx, cy)
+    return this
+  }
+})
+
+const coordPlane = (cx = 0, cy = 0, scale = 1) => {
+  const clip = draw.clip().add(
+          draw.rect(199, 199).center(0, 0)
+        ),
+        gg = draw.group().stroke('grey').clipWith(clip)
+
+  for (let i = -20; i <= 20; i++) {
+    gg.add(draw.line(i*100,  -2000, i*100,  2000))
+      .add(draw.line( -2000, i*100,  2000, i*100))
+  }
+  gg.centerPlane(cx, cy, scale)
+  return gg
+}
 
 const label = (text, x, y) =>
   draw.text(text).center(x, y).scale(1, -1)
