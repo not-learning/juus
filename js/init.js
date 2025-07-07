@@ -6,10 +6,9 @@ draw.fill('none').stroke({width: 0.5})//.stroke('white')
 
 const bodyEl = document.getElementsByTagName('body')[0]
 
-const hh = document.createElement('h1')
-hh.textContent = '______________'
-bodyEl.insertBefore(hh, bodyEl.firstChild)
+// const hh = document.createElement('h1')
+// hh.textContent = '______________'
+// bodyEl.insertBefore(hh, bodyEl.firstChild)
 
 const subtitles = document.createElement('p')
-subtitles.textContent = 'Welcome to my personal hell.'
 bodyEl.appendChild(subtitles)

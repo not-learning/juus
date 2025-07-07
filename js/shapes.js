@@ -19,6 +19,15 @@ SVG.extend(SVG.List, {
     this[0].center(0, y)
     this[1].center(x, 0)
     return this
+  },
+
+  centerLabels: function(x, y) {
+    this.matrix(1, 0, 0, 1, 0, 0)
+    this[0].center(112, y - 6)
+    this[1].center(x + 6, 112)
+    this[2].center(x + 6, y - 6)
+    this.scale(1, -1)
+    return this
   }
 })
 
