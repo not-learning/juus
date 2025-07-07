@@ -32,11 +32,12 @@ SVG.extend(SVG.G, {
     this.scale(1 / scale)
       .stroke({width: 0.5 * scale})
     clipRect.scale(scale)
-    this.center(cx, cy)
+    this.center(cx * scale, cy * scale)
     return this
   }
 })
 
+// TODO optimise: use symbol or defs
 const coordPlane = (cx = 0, cy = 0, scale = 1) => {
   const clip = draw.clip().add(
           draw.rect(199, 199).center(0, 0)
