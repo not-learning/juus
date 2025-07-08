@@ -14,6 +14,17 @@ const coordAxes = (cx = 0, cy = 0) => new SVG.List([
   arrow(cx, -115, cx, 115),
 ])
 
+SVG.extend(SVG.Shape, {
+  centerShape: function(cx = 0, cy = 0, scale = 1) {
+    this.matrix(1, 0, 0, 1, 0, 0)
+      .center(0, 0)
+    this.scale(1 / scale)
+      .stroke({width: 0.5 * scale})
+    this.center(cx * scale, cy * scale)
+    return this
+  }
+})
+
 SVG.extend(SVG.List, {
   centerAxes: function(x, y) {
     this[0].center(0, y)
