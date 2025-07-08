@@ -4,19 +4,20 @@ const pi2 = 2 * Math.PI,
 const State = {
   op:    0,
   ang:   0,
-  px:  -50,
-  py:  -30,
-  scale: 7,
+  px:  -63,
+  py:  -52,
+  scale: 4,
+  dist: function() { return 100 / this.scale },
   cx:   60,
   cy:   50,
-  r:    30,
+  r:    34,
 }
 
 const L = {}
 
 subtitles.style.opacity = 0
 
-function lin(spd = 0.01) {
+function lin(spd = 0.02) {
   let n = 0
   return function() {
     return n = Math.min(1, n + spd)
@@ -25,9 +26,9 @@ function lin(spd = 0.01) {
 
 function ease(spd = 0.05) {
   let n = -pi_2, m = 0
-  return function() {
+  return function(pitch = 1.3) {
     n = Math.min(pi_2, n + spd)
-    return (Math.atan(1 * Math.sin(n)) / Math.atan(1) + 1) / 2
+    return (Math.atan(pitch * Math.sin(n)) / Math.atan(pitch) + 1) / 2
   }
 }
 
@@ -37,7 +38,7 @@ function myAnim(k, start = 0, finish = 1) {
 
 const plane = coordPlane()
   .stroke('grey')
-  .centerPlane(State.px, State.py, State.scale)
+plane.centerPlane(State.px, State.py, State.scale)
 
 const axes = coordAxes()
   .stroke('white')
@@ -81,24 +82,18 @@ function anim2() {
   anim3()
 }
 
+// TODO change arc to circle
 const an3 = ease()
 function anim3() {
   k = an3()
-  let px = myAnim(k, State.px, 0)
-    , py = myAnim(k, State.py, 0)
-    , cx = myAnim(k, State.cx, 0)
-    , cy = myAnim(k, State.cy, 0)
-  plane.centerPlane(px, py, State.scale)
-  axes.centerAxes(px, py)
-  axesL.centerLabels(px, py)
+  let cx = myAnim(k, State.cx, State.px),
+      cy = myAnim(k, State.cy, State.py)
   circle.plot(arcPath(cx, cy, State.r, 0, State.ang))
   subtitles.textContent = 'В самый центр'
   if (k < 1) {
     window.requestAnimationFrame(anim3)
     return
   }
-  State.px = px
-  State.py = py
   State.cx = cx
   State.cy = cy
   anim4()
@@ -115,23 +110,33 @@ function anim4() {
     return
   }
   State.r = r
-  // anim5()
+  anim5()
 }
 
-const an5 = lin()
+const an5 = ease()
 function anim5() {
   k = an5()
-  let scale = myAnim(k, State.scale, 1)
-  plane.centerPlane(State.px, State.py, scale)
-  axes.centerAxes(State.px, State.py)
-  axesL.centerLabels(State.px, State.py)
-  circle.scale(1/scale)
+  let cx = myAnim(k, State.cx, 0)
+    , cy = myAnim(k, State.cy, 0)
+    , dist = myAnim(k, State.dist(), 100)
+    , r = myAnim(k, State.r, 100)
+    , px = myAnim(k, State.px, 0)
+    , py = myAnim(k, State.py, 0)
+  plane.linearCenterPlane(px, py, dist)
+  axes.centerAxes(px, py)
+  axesL.centerLabels(px, py)
+  circle.plot(arcPath(cx, cy, r, 0, State.ang))
   subtitles.textContent = 'Сделаем покрупнее'
   if (k < 1) {
     window.requestAnimationFrame(anim5)
     return
   }
-  State.scale = scale
+  State.cx = cx
+  State.cy = cy
+  State.scale = 100 / dist
+  State.r = r
+  State.px = px
+  State.py = py
   anim6()
 }
 

@@ -42,18 +42,28 @@ SVG.extend(SVG.List, {
   }
 })
 
+// TODO move clip to root svg
 SVG.extend(SVG.G, {
   centerPlane: function(cx = 0, cy = 0, scale = 1) {
-    const clipRect = this.clipper().children()[0]
-    this.matrix(1, 0, 0, 1, 0, 0)
-      .center(0, 0)
-    clipRect.matrix(1, 0, 0, 1, 0, 0)
-      .center(0, 0)
-    this.scale(1 / scale)
-      .stroke({width: 0.5 * scale})
-    clipRect.scale(scale)
-    this.center(cx * scale, cy * scale)
-    return this
+    let kids = this.children()
+    for (let i = 0; i < kids.length; i += 2) {
+      n = (i - 40) * 50 / scale
+      x = n + cx
+      y = n + cy
+      kids[i].center(x, 0)
+      kids[i+1].center(0, y)
+    }
+  },
+
+  linearCenterPlane: function(cx = 0, cy = 0, dist = 1) {
+    let kids = this.children()
+    for (let i = 0; i < kids.length; i += 2) {
+      n = dist * (i - 40) / 2
+      x = n + cx
+      y = n + cy
+      kids[i].center(x, 0)
+      kids[i+1].center(0, y)
+    }
   }
 })
 
@@ -65,8 +75,8 @@ const coordPlane = (cx = 0, cy = 0, scale = 1) => {
         gg = draw.group().stroke('grey').clipWith(clip)
 
   for (let i = -20; i <= 20; i++) {
-    gg.add(draw.line(i*100,  -2000, i*100,  2000))
-      .add(draw.line( -2000, i*100,  2000, i*100))
+    gg.add(draw.line(i*100,  -100, i*100,  100))
+      .add(draw.line( -100, i*100,  100, i*100))
   }
   gg.centerPlane(cx, cy, scale)
   return gg
