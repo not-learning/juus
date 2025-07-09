@@ -1,3 +1,5 @@
+"use strict";
+
 const draw = SVG().addTo('body')
 draw.fill('none').stroke({width: 0.5})//.stroke('white')
   .viewbox(-120, -120, 240, 240)

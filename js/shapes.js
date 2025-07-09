@@ -1,3 +1,5 @@
+"use strict";
+
 const arrow = (x1, y1, x2, y2) => {
   return draw.line()
   .plot(x1, y1, x2, y2)
@@ -33,7 +35,8 @@ SVG.extend(SVG.List, {
 // TODO move clip to root svg
 SVG.extend(SVG.G, {
   centerPlane: function(cx = 0, cy = 0, scale = 1) {
-    let kids = this.children()
+    let n, x, y
+      , kids = this.children()
     for (let i = 0; i < kids.length; i += 2) {
       n = (i - 40) * 50 / scale
       x = n + cx
@@ -44,7 +47,8 @@ SVG.extend(SVG.G, {
   },
 
   linearCenterPlane: function(cx = 0, cy = 0, dist = 1) {
-    let kids = this.children()
+    let n, x, y
+      , kids = this.children()
     for (let i = 0; i < kids.length; i += 2) {
       n = dist * (i - 40) / 2
       x = n + cx
