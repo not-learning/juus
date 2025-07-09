@@ -1,67 +1,57 @@
 "use strict";
 
-const pi2 = 2 * Math.PI,
-      pi_2 = Math.PI / 2
+const pi = Math.PI
+    , pi2 = 2 * pi
+    , pi_2 = pi / 2
 
 const State = {
   op:    0,
   ang:   0,
-  px:  -63,
-  py:  -52,
+  planeX:  -63,
+  planeY:  -52,
   scale: 4,
-  dist: function() { return 100 / this.scale },
-  cx:   67,
-  cy:   53,
-  r:    34,
+  circleX: 67,
+  circleY: 53,
+  circleR: 34,
+  pocAng: pi / 4,
+  pocX: function() {
+    return Math.cos(this.pocAng) * this.circleR + this.circleX
+  },
+  pocY: function() {
+    return Math.sin(this.pocAng) * this.circleR + this.circleY
+  },
 }
 
-const L = {}
-
-subtitles.style.opacity = 0
-
-function lin(spd = 0.02) {
-  let n = 0
-  return function() {
-    return n = Math.min(1, n + spd)
-  }
-}
-
-function ease(spd = 0.05) {
-  let n = -pi_2, m = 0
-  return function(pitch = 1.3) {
-    n = Math.min(pi_2, n + spd)
-    return (Math.atan(pitch * Math.sin(n)) / Math.atan(pitch) + 1) / 2
-  }
-}
-
-function myAnim(k, start = 0, finish = 1) {
-  return start + (finish - start) * k
-}
+subtitles.style.opacity = State.op
 
 const plane = coordPlane()
   .stroke('grey')
-plane.centerPlane(State.px, State.py, State.scale)
+plane.centerPlane(State.planeX, State.planeY, State.scale)
 
 const axes = coordAxes()
   .stroke('white')
-  .centerAxes(State.px, State.py)
+  .centerAxes(State.planeX, State.planeY)
 
 const axesL = axesLabels()
-  .centerLabels(State.px, State.py)
+  .centerLabels(State.planeX, State.planeY)
 
-const circle = draw.path()
+const unitCircle = draw.path()
   .stroke('mediumspringgreen')
+
+const pointOnCircle = dot(State.pocX(), State.pocY())
+  .stroke('white').fill('white')
 
 // ### Animations ###
 const an1 = ease()
 function anim1() {
+  subtitles.textContent = 'Возьмем систему координат'
+
   let k = an1()
     , op = myAnim(k)
 
   axes.opacity(op*2)
   plane.opacity(op)
   axesL.opacity(op)
-  subtitles.textContent = 'Возьмем систему координат'
   subtitles.style.opacity = op
   if (k < 1) {
     window.requestAnimationFrame(anim1)
@@ -74,11 +64,12 @@ function anim1() {
 
 const an2 = ease()
 function anim2() {
+  subtitles.textContent = 'И поместим в нее круг'
+
   let k = an2()
     , ang = myAnim(k, 0, pi2)
 
-  circle.plot(arcPath(State.cx, State.cy, State.r, 0, ang))
-  subtitles.textContent = 'И поместим в нее круг'
+  unitCircle.plot(arcPath(State.circleX, State.circleY, State.circleR, 0, ang))
   if (k < 1) {
     window.requestAnimationFrame(anim2)
     return
@@ -91,69 +82,72 @@ function anim2() {
 // TODO change arc to circle
 const an3 = ease()
 function anim3() {
-  let k = an3()
-    , cx = myAnim(k, State.cx, State.px),
-      cy = myAnim(k, State.cy, State.py)
-
-  circle.plot(arcPath(cx, cy, State.r, 0, State.ang))
   subtitles.textContent = 'В самый центр'
+
+  let k = an3()
+    , circleX = myAnim(k, State.circleX, State.planeX),
+      circleY = myAnim(k, State.circleY, State.planeY)
+
+  unitCircle.plot(arcPath(circleX, circleY, State.circleR, 0, State.ang))
   if (k < 1) {
     window.requestAnimationFrame(anim3)
     return
   }
 
-  State.cx = cx
-  State.cy = cy
+  State.circleX = circleX
+  State.circleY = circleY
   anim4()
 }
 
 const an4 = ease()
 function anim4() {
-  let k = an4()
-    , r = myAnim(k, State.r, 100 / State.scale)
-
-  circle.plot(arcPath(State.cx, State.cy, r, 0, State.ang))
   subtitles.textContent = 'И пусть радиус равен единице'
+
+  let k = an4()
+    , r = myAnim(k, State.circleR, 100 / State.scale)
+
+  unitCircle.plot(arcPath(State.circleX, State.circleY, r, 0, State.ang))
   if (k < 1) {
     window.requestAnimationFrame(anim4)
     return
   }
 
-  State.r = r
+  State.circleR = r
   anim5()
 }
 
 const an5 = ease()
 function anim5() {
-  let k = an5()
-    , cx = myAnim(k, State.cx, 0)
-    , cy = myAnim(k, State.cy, 0)
-    , dist = myAnim(k, State.dist(), 100)
-    , r = myAnim(k, State.r, 100)
-    , px = myAnim(k, State.px, 0)
-    , py = myAnim(k, State.py, 0)
-
-  plane.linearCenterPlane(px, py, dist)
-  axes.centerAxes(px, py)
-  axesL.centerLabels(px, py)
-  circle.plot(arcPath(cx, cy, r, 0, State.ang))
   subtitles.textContent = 'Сделаем покрупнее'
+
+  let k = an5()
+    , circleX = myAnim(k, State.circleX, 0)
+    , circleY = myAnim(k, State.circleY, 0)
+    , dist = myAnim(k, 100 / State.scale, 100)
+    , r = myAnim(k, State.circleR, 100)
+    , planeX = myAnim(k, State.planeX, 0)
+    , planeY = myAnim(k, State.planeY, 0)
+
+  plane.linearCenterPlane(planeX, planeY, dist)
+  axes.centerAxes(planeX, planeY)
+  axesL.centerLabels(planeX, planeY)
+  unitCircle.plot(arcPath(circleX, circleY, r, 0, State.ang))
   if (k < 1) {
     window.requestAnimationFrame(anim5)
     return
   }
 
-  State.cx = cx
-  State.cy = cy
+  State.circleX = circleX
+  State.circleY = circleY
   State.scale = 100 / dist
-  State.r = r
-  State.px = px
-  State.py = py
+  State.circleR = r
+  State.planeX = planeX
+  State.planeY = planeY
   anim6()
 }
 
 function anim6() {
-  
+  subtitles.textContent = 'У каждой точки на окружности свои координаты'
 }
 
 anim1()
