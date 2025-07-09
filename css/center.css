@@ -6,13 +6,15 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	/* justify-content: stretch; */
 }
 body > * {
 	flex: 0;
-	margin: auto;
 }
 svg {
 	flex: 1;
 	margin: 0;
+}
+p {
+	margin: 1em auto 3em auto;
+	font-size: large;
 }

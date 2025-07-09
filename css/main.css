@@ -26,10 +26,11 @@ body {
 	;
 	color: white;
 	background-color: #000000;
+	font-family: "DejaVu Serif";
 }
 text {
 	font-family: "DejaVu Sans";
-	font-size: 0.3em;
+	font-size: 0.5em;
 }
 a:link { color: dodgerblue; }
 a:visited {color: violet;}

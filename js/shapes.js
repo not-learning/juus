@@ -5,7 +5,6 @@ const arrow = (x1, y1, x2, y2) => {
     add.path('m 0, 2 l 13, 3 l -13, 3')
       .stroke({width: 1})
       .stroke('context-stroke')
-      //.fill('context-stroke')
   })
 }
 
@@ -13,17 +12,6 @@ const coordAxes = (cx = 0, cy = 0) => new SVG.List([
   arrow(-115, cy, 115, cy),
   arrow(cx, -115, cx, 115),
 ])
-
-SVG.extend(SVG.Shape, {
-  centerShape: function(cx = 0, cy = 0, scale = 1) {
-    this.matrix(1, 0, 0, 1, 0, 0)
-      .center(0, 0)
-    this.scale(1 / scale)
-      .stroke({width: 0.5 * scale})
-    this.center(cx * scale, cy * scale)
-    return this
-  }
-})
 
 SVG.extend(SVG.List, {
   centerAxes: function(x, y) {
@@ -34,9 +22,9 @@ SVG.extend(SVG.List, {
 
   centerLabels: function(x, y) {
     this.matrix(1, 0, 0, 1, 0, 0)
-    this[0].center(112, y - 6)
+    this[0].center(112, y - 7)
     this[1].center(x + 6, 112)
-    this[2].center(x + 6, y - 6)
+    this[2].center(x + 6, y - 7)
     this.scale(1, -1)
     return this
   }
