@@ -46,13 +46,14 @@ SVG.extend(SVG.G, {
 })
 
 
-const spinXY = (cx, cy, r, a) => [
-  Math.cos(a) * r + cx,
-  Math.sin(a) * r + cy,
-]
+function spinXY(cx, cy, r, a) {
+  return [
+    Math.cos(a) * r + cx,
+    Math.sin(a) * r + cy,
+  ]
+}
 
-
-const arrow = (x1, y1, x2, y2) => {
+function arrow(x1, y1, x2, y2) {
   const tw = 1, tl = 5 // arrow tip width, length
       , w = x2 - x1
       , h = y2 - y1
@@ -74,14 +75,16 @@ const arrow = (x1, y1, x2, y2) => {
 }
 
 
-const coordAxes = (cx = 0, cy = 0) => new SVG.List([
-  draw.path(arrow(-115, cy, 115, cy)),
-  draw.path(arrow(cx, -115, cx, 115)),
-])
+function coordAxes(cx = 0, cy = 0) {
+  return new SVG.List([
+    draw.path(arrow(-115, cy, 115, cy)),
+    draw.path(arrow(cx, -115, cx, 115)),
+  ])
+}
 
 
 // TODO optimise: use symbol or defs
-const coordPlane = (cx = 0, cy = 0, scale = 1) => {
+function coordPlane(cx = 0, cy = 0, scale = 1) {
   const clip = draw.clip().add(
           draw.rect(199, 199).center(0, 0)
         ),
@@ -96,21 +99,26 @@ const coordPlane = (cx = 0, cy = 0, scale = 1) => {
 }
 
 
-const label = (text, x, y) =>
-  draw.text(text).center(x, y).scale(1, -1)
+function label(text, x, y) {
+  return draw.text(text).center(x, y).scale(1, -1)
+}
 
 
-const axesLabels = () => new SVG.List([
-  label('x', 112, -7),
-  label('y', 7, 112),
-  label('0', 6, -6),
-]).each(i => i.fill('white'))
+function axesLabels() {
+  return new SVG.List([
+    label('x', 112, -7),
+    label('y', 7, 112),
+    label('0', 6, -6),
+  ]).each(i => i.fill('white'))
+}
 
 
-const dot = (x, y) => draw.defs().circle(2).center(x, y)
+function dot(x, y) {
+  return draw.defs().circle(2).center(x, y)
+}
 
 
-const arcPath = (cx, cy, r, a1, a2) => {
+function arcPath(cx, cy, r, a1, a2) {
   const dif = -Math.sin((a2 - a1) % (4 * Math.PI) / 2)
   let am, p1, p2, p3
 
