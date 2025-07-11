@@ -24,12 +24,15 @@ const State = {
 
 subtitles.style.opacity = State.op
 
+
+
+// ### Shapes ###
 const plane = coordPlane()
   .stroke('grey')
 plane.centerPlane(State.planeX, State.planeY, State.scale)
 
 const axes = coordAxes()
-  .stroke('white')
+  .stroke('white').fill('white')
   .centerAxes(State.planeX, State.planeY)
 
 const axesL = axesLabels()
@@ -38,8 +41,9 @@ const axesL = axesLabels()
 const unitCircle = draw.path()
   .stroke('mediumspringgreen')
 
-const pointOnCircle = dot(State.pocX(), State.pocY())
-  .stroke('white').fill('white')
+const dots = dot(0, 0)
+
+
 
 // ### Animations ###
 const an1 = ease()
@@ -148,6 +152,9 @@ function anim5() {
 
 function anim6() {
   subtitles.textContent = 'У каждой точки на окружности свои координаты'
+  const poc = draw.use(dots)
+    .stroke('white').fill('white')
+    .center(State.pocX(), State.pocY())
 }
 
-anim1()
+// anim1()

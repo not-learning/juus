@@ -15,6 +15,7 @@ svg {
 	margin: 0;
 }
 p {
-	margin: 1em auto 3em auto;
-	font-size: large;
+	margin: 1em 1.5em 3em 1.5em;
+	min-height: 60px;
+	text-align: center;
 }
