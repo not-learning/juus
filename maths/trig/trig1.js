@@ -8,8 +8,8 @@ const State = {
   op:    0,
   ang:   0,
   planeX:  -63,
-  planeY:  -52,
-  scale: 4,
+  planeY:  -72,
+  scope: 4,
   circleX: 67,
   circleY: 53,
   circleR: 34,
@@ -25,11 +25,14 @@ const State = {
 subtitles.style.opacity = State.op
 
 
-
 // ### Shapes ###
-const plane = coordPlane()
-  .stroke('grey')
-plane.centerPlane(State.planeX, State.planeY, State.scale)
+let plane = coordPlane(State.planeX, State.planeY, State.scope).stroke('grey')
+
+function redrawPlane(cx = 0, cy = 0, scope = 1) {
+  plane.remove()
+  plane = coordPlane(cx, cy, scope).stroke('grey')
+}
+
 
 const axes = coordAxes()
   .stroke('white').fill('white')
@@ -42,7 +45,6 @@ const unitCircle = draw.path()
   .stroke('mediumspringgreen')
 
 const dots = dot(0, 0)
-
 
 
 // ### Animations ###
@@ -108,7 +110,7 @@ function anim4() {
   subtitles.textContent = 'И пусть радиус равен единице'
 
   let k = an4()
-    , r = myAnim(k, State.circleR, 100 / State.scale)
+    , r = myAnim(k, State.circleR, 100 / State.scope)
 
   unitCircle.plot(arcPath(State.circleX, State.circleY, r, 0, State.ang))
   if (k < 1) {
@@ -127,12 +129,13 @@ function anim5() {
   let k = an5()
     , circleX = myAnim(k, State.circleX, 0)
     , circleY = myAnim(k, State.circleY, 0)
-    , dist = myAnim(k, 100 / State.scale, 100)
+    , scope = 100 / myAnim(k, 100 / State.scope, 100)
     , r = myAnim(k, State.circleR, 100)
     , planeX = myAnim(k, State.planeX, 0)
     , planeY = myAnim(k, State.planeY, 0)
 
-  plane.linearCenterPlane(planeX, planeY, dist)
+  // redrawPlane(planeX, planeY, scope)
+  plane.centerPlane(planeX, planeY, scope)
   axes.centerAxes(planeX, planeY)
   axesL.centerLabels(planeX, planeY)
   unitCircle.plot(arcPath(circleX, circleY, r, 0, State.ang))
@@ -143,7 +146,7 @@ function anim5() {
 
   State.circleX = circleX
   State.circleY = circleY
-  State.scale = 100 / dist
+  State.scope = scope
   State.circleR = r
   State.planeX = planeX
   State.planeY = planeY
@@ -157,4 +160,4 @@ function anim6() {
     .center(State.pocX(), State.pocY())
 }
 
-// anim1()
+anim1()
