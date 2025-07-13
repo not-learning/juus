@@ -1,15 +1,22 @@
 "use strict";
 
-SVG.extend(SVG.List, {
+SVG.extend(SVG.G, {
   centerAxes: function(x, y) {
-    this[0].center(0, y)
-    this[1].center(x, 0)
+    this.children()[0].center(0, y)
+    this.children()[1].center(x, 0)
     return this
   },
 
-  centerPlane: function(cx, cy, scope) {
-    const xl = this[0]
-        , yl = this[1]
+  centerLabels: function(x, y) {
+    this.children()[0].center(0, y)
+    this.children()[1].center(x, 0)
+    this.children()[2].center(x, y)
+    return this
+  },
+
+  centerPlane: function(cx = 0, cy = 0, scope = 1) {
+    const xl = this.children()[0].children()
+        , yl = this.children()[1].children()
         , delta = 100 / scope
     let x, y, nx = 0, ny = 0
     cx %= delta
@@ -19,57 +26,49 @@ SVG.extend(SVG.List, {
       x = y = i * delta
       if (x + cx < 100) {
         typeof xl[nx] === 'undefined'
-        ? xl.push(draw.use(coordLines[0]).center(x + cx, 0))
+        ? xl.add(draw.use(coordLines[0]).center(x + cx, 0))
         : xl[nx].center(x + cx, 0)
         nx++
       }
       if (i > 0 && -x + cx > -100) {
         typeof xl[nx] === 'undefined'
-        ? xl.push(draw.use(coordLines[0]).center(-x + cx, 0))
+        ? xl.add(draw.use(coordLines[0]).center(-x + cx, 0))
         : xl[nx].center(-x + cx, 0)
         nx++
       }
       if (y + cy < 100) {
         typeof yl[ny] === 'undefined'
-        ? yl.push(draw.use(coordLines[1]).center(0, y + cy))
+        ? yl.add(draw.use(coordLines[1]).center(0, y + cy))
         : yl[ny].center(0, y + cy)
         ny++
       }
       if (i > 0 && -y + cy > -100) {
         typeof yl[ny] === 'undefined'
-        ? yl.push(draw.use(coordLines[1]).center(0, -y + cy))
+        ? yl.add(draw.use(coordLines[1]).center(0, -y + cy))
         : yl[ny].center(0, -y + cy)
         ny++
       }
     }
+
     for (let i = nx; i < xl.length; i++) {
       xl[i].remove()
     }
     for (let i = ny; i < yl.length; i++) {
       yl[i].remove()
     }
-    xl.splice(nx)
-    yl.splice(ny)
     return this
   },
 
-  centerLabels: function(x, y) {
-    // this.matrix(1, 0, 0, 1, 0, 0)
-    this[0].center(0, y)
-    this[1].center(x, 0)
-    this[2].center(x, y)
-    // this.scale(1, -1)
+  centerCoord: function(cx = 0, cy = 0, scope = 1) {
+    const plane = this.children()[0]
+        , axes = this.children()[1]
+        , labels = this.children()[2]
+    plane.centerPlane(cx, cy, scope)
+    axes.centerAxes(cx, cy)
+    labels.centerLabels(cx, cy)
     return this
   }
 })
-
-
-function spinXY(cx, cy, r, a) {
-  return [
-    Math.cos(a) * r + cx,
-    Math.sin(a) * r + cy,
-  ]
-}
 
 
 function arrow(x1, y1, x2, y2) {
@@ -95,28 +94,25 @@ function arrow(x1, y1, x2, y2) {
 
 
 function coordAxes(cx = 0, cy = 0) {
-  return new SVG.List([
-    draw.path(arrow(-115, cy, 115, cy)),
-    draw.path(arrow(cx, -115, cx, 115)),
-  ])
+  return draw.group()
+  .add(draw.path(arrow(-115, cy, 115, cy)))
+  .add(draw.path(arrow(cx, -115, cx, 115)))
 }
 
 
-const coordLines = new SVG.List([
-  new SVG.Line().plot(0, -100, 0, 100),
-  new SVG.Line().plot(-100, 0, 100, 0),
-])
-for (const it of coordLines) {
-  draw.defs().add(it)
-}
+const coordLines = draw.group()
+  .add(draw.line().plot(0, -100, 0, 100))
+  .add(draw.line().plot(-100, 0, 100, 0))
+  .addTo(draw.defs())
 
 
 function coordPlane(cx = 0, cy = 0, scope = 1) {
-  const xl = new SVG.List()
-      , yl = new SVG.List()
-      , ll = new SVG.List([xl, yl])
+  const xg = draw.group()
+      , yg = draw.group()
+      , gg = draw.group()
+             .add(xg)
+             .add(yg)
       , delta = 100 / scope
-      // , f = i => i * 100 / scope
   let x, y
   cx %= delta
   cy %= delta
@@ -124,19 +120,19 @@ function coordPlane(cx = 0, cy = 0, scope = 1) {
   for (let i = 0; i < scope * 2 + 2; i++) {
     x = y = i * delta
     if (x + cx < 100) {
-      xl.push(draw.use(coordLines[0]).center(x + cx, 0))
+      xg.add(draw.use(coordLines.children()[0]).center(x + cx, 0))
     }
     if (i > 0 && -x + cx > -100) {
-      xl.push(draw.use(coordLines[0]).center(-x + cx, 0))
+      xg.add(draw.use(coordLines.children()[0]).center(-x + cx, 0))
     }
     if (y + cy < 100) {
-      yl.push(draw.use(coordLines[1]).center(0, y + cy))
+      yg.add(draw.use(coordLines.children()[1]).center(0, y + cy))
     }
     if (i > 0 && -y + cy > -100) {
-      yl.push(draw.use(coordLines[1]).center(0, -y + cy))
+      yg.add(draw.use(coordLines.children()[1]).center(0, -y + cy))
     }
   }
-  return ll
+  return gg
 }
 
 
@@ -145,17 +141,33 @@ function label(text, x = 0, y = 0) {
 }
 
 
-function axesLabels() {
-  return new SVG.List([
-    draw.use(label('x', 112, -7)),
-    draw.use(label('y', 7, 112)),
-    draw.use(label('0', 6, -6)),
-  ]).each(i => i.fill('white'))
+function axesLabels(cx = 0, cy = 0) {
+  return draw.group()
+  .add(draw.use(label('x', 112, -7)))
+  .add(draw.use(label('y', 7, 112)))
+  .add(draw.use(label('0', 6, -6)))
+  .centerLabels(cx, cy)
+}
+
+
+function coord(cx = 0, cy = 0, scope = 1) {
+  return draw.group()
+    .add(coordPlane(cx, cy, scope))
+    .add(coordAxes(cx, cy))
+    .add(axesLabels(cx, cy))
 }
 
 
 function dot(x, y) {
   return draw.defs().circle(2).center(x, y)
+}
+
+
+function spinXY(cx, cy, r, a) {
+  return [
+    Math.cos(a) * r + cx,
+    Math.sin(a) * r + cy,
+  ]
 }
 
 

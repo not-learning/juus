@@ -13,7 +13,7 @@ const State = {
   circleX: 67,
   circleY: 53,
   circleR: 34,
-  pocAng: pi / 4,
+  pocAng: pi / 3,
   pocX: function() {
     return Math.cos(this.pocAng) * this.circleR + this.circleX
   },
@@ -26,20 +26,22 @@ subtitles.style.opacity = State.op
 
 
 // ### Shapes ###
-let plane = coordPlane(State.planeX, State.planeY, State.scope).stroke('grey')
-
-function redrawPlane(cx = 0, cy = 0, scope = 1) {
-  plane.remove()
-  plane = coordPlane(cx, cy, scope).stroke('grey')
-}
+// let plane = coordPlane(State.planeX, State.planeY, State.scope).stroke('grey')
 
 
-const axes = coordAxes()
-  .stroke('white').fill('white')
-  .centerAxes(State.planeX, State.planeY)
+// const axes = coordAxes()
+//   .stroke('white').fill('white')
+//   .centerAxes(State.planeX, State.planeY)
 
-const axesL = axesLabels()
-  .centerLabels(State.planeX, State.planeY)
+// const axesL = axesLabels()
+//   .fill('white')
+//   .centerLabels(State.planeX, State.planeY)
+
+const crd = coord(State.planeX, State.planeY, State.scope)
+      .stroke('white').fill('white')
+    , plane = crd.children()[0].stroke('grey')
+    , axes = crd.children()[1]
+    , labels = crd.children()[2].stroke('none').fill('white')
 
 const unitCircle = draw.path()
   .stroke('mediumspringgreen')
@@ -57,7 +59,7 @@ function anim1() {
 
   axes.opacity(op*2)
   plane.opacity(op)
-  axesL.opacity(op)
+  labels.opacity(op)
   subtitles.style.opacity = op
   if (k < 1) {
     window.requestAnimationFrame(anim1)
@@ -135,9 +137,10 @@ function anim5() {
     , planeY = myAnim(k, State.planeY, 0)
 
   // redrawPlane(planeX, planeY, scope)
-  plane.centerPlane(planeX, planeY, scope)
-  axes.centerAxes(planeX, planeY)
-  axesL.centerLabels(planeX, planeY)
+  // plane.centerPlane(planeX, planeY, scope)
+  // axes.centerAxes(planeX, planeY)
+  // labels.centerLabels(planeX, planeY)
+  crd.centerCoord(planeX, planeY, scope)
   unitCircle.plot(arcPath(circleX, circleY, r, 0, State.ang))
   if (k < 1) {
     window.requestAnimationFrame(anim5)
