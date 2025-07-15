@@ -1,7 +1,7 @@
 "use strict";
 
 const draw = SVG().addTo('body')
-draw.fill('none').stroke({width: 0.5})//.stroke('white')
+draw.fill('none').stroke({width: 0.5}).stroke('white')
   .viewbox(-120, -120, 240, 240)
   // .attr('vector-effect', 'non-scaling-stroke')
   .scale(1, -1)
@@ -12,5 +12,10 @@ const bodyEl = document.getElementsByTagName('body')[0]
 // hh.textContent = '______________'
 // bodyEl.insertBefore(hh, bodyEl.firstChild)
 
-const subtitles = document.createElement('p')
-bodyEl.appendChild(subtitles)
+const subtitles = bodyEl.appendChild(
+  document.createElement('p')
+)
+
+const pi = Math.PI
+    , pi2 = 2 * pi
+    , pi_2 = pi / 2
