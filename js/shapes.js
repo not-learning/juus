@@ -78,19 +78,15 @@ SVG.extend(SVG.G, {
 
 // TODO think: named parameters
 SVG.extend(SVG.Circle, {
-  centerArc: function(
-    a2 = this.attr('a2'),
+  arcAngles: function(
     a1 = this.attr('a1'),
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
-    r = this.attr('r'),
+    a2 = this.attr('a2'),
   ) {
     const dif = (a2 - a1) % pi2
         , dash = dif < 0
         ? [pi2 + dif, -dif]
         : [dif, pi2 - dif]
-    return this.radius(r)
-      .center(cx, cy)
+    return this
       .attr({
         'stroke-dasharray': dash,
         'stroke-dashoffset': -a1,
@@ -210,14 +206,14 @@ function coordPlane(cx = 0, cy = 0, scope = 1) {
 
 
 // TODO fix: two points at angles < 0.01
-function arc(a2 = pi2, a1 = 0, cx = 0, cy = 0, r = 100) {
+function arc(a1 = 0, a2 = pi2) {
   return new SVG.Circle()
+  .arcAngles(a1, a2)
   .attr({
     pathLength: pi2,
     a1: a1,
     a2: a2,
   })
-  .centerArc(a2, a1, cx, cy, r)
 }
 
 
