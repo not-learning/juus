@@ -83,9 +83,15 @@ SVG.extend(SVG.Circle, {
     a2 = this.attr('a2'),
   ) {
     const dif = (a2 - a1) % pi2
-        , dash = dif < 0
-        ? [pi2 + dif, -dif]
-        : [dif, pi2 - dif]
+    let dash = [dif, pi2 - dif]
+
+    switch (true) {
+      case a1 === a2:
+        dash = [0, 100]; break
+      case dif <= 0:
+        dash = [pi2 + dif, -dif]; break
+    }
+
     return this
       .attr({
         'stroke-dasharray': dash,
@@ -97,8 +103,8 @@ SVG.extend(SVG.Circle, {
 })
 
 
-// draw.line(0, -10, 0, 10).stroke('white') // DEV
-// draw.line(-10, 0, 10, 0).stroke('white')
+// display.line(0, -10, 0, 10).stroke('white') // DEV
+// display.line(-10, 0, 10, 0).stroke('white')
 
 
 function spinXY(cx, cy, r, a) {
@@ -225,6 +231,6 @@ function coord(cx = 0, cy = 0, scope = 1) {
 }
 
 
-// const gr = draw.group() // DEV
+// const gr = display.group() // DEV
 // .add(dot().fill('black'))
 // .add(dot().center(4, 0))

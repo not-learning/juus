@@ -1,7 +1,7 @@
 "use strict";
 
-const draw = SVG().addTo('body')
-draw.fill('none').stroke({width: 0.5}).stroke('white')
+const display = SVG().addTo('body')
+display.fill('none').stroke({width: 0.5}).stroke('white')
   .viewbox(-120, -120, 240, 240)
   // .attr('vector-effect', 'non-scaling-stroke')
   .scale(1, -1)

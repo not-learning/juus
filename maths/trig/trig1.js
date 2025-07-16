@@ -2,39 +2,87 @@
 
 // ### Drawings ###
 const D = {
-  coord: coord(),
-  unitCircle: arc()
+  crd: coord(),
+  coord: function() {
+    if (this.crd.root() === null) {
+      return this.crd.addTo(display)
+    }
+    return this.crd
+  },
+
+  uc: arc()
     .radius(100)
-    .center(0, 0)
     .stroke('mediumspringgreen'),
+  unitCircle: function() {
+    if (this.uc.root() === null) {
+      return this.uc.addTo(display)
+    }
+    return this.uc
+  },
 }
+
 
 pre10()
 function pre10() {
-  const cc = coord().addTo(draw)
-  .centerCoord(-10, -15, 3.5)
-  const aa = arc().radius(100).stroke('mediumspringgreen').addTo(draw)
-  let a1 = 0
-    , a2 = 0
+  subtitles.textContent = 'Возьмем круг'
+  D.unitCircle()
+  .radius(50)
+  .center(53, 48)
 
-  function shot10() {
-    aa.arcAngles(a1, a2)
-    a1 += 0.0002, a2 -= 0.0001
-    window.requestAnimationFrame(shot10)
-  }
+  let ang = 0
+    , k = ease()
+
   shot10()
+  function shot10() {
+    ang = k() * pi2
+    D.unitCircle().arcAngles(0, ang)
+    if (ang < pi2) {
+      window.requestAnimationFrame(shot10)
+      return
+    }
+    D.unitCircle().arcAngles(0, pi2)
+    pre20()
+  }
 }
 
 
-const c1 = arc(1, 0)
-  .radius(10)
-  .center(-100, 100)
-  .addTo(draw)
-    , c2 = arc(0, 1)
-  .radius(10)
-  .center(-80, 100)
-  .addTo(draw)
-    , c3 = arc(pi2, -1)
-  .radius(10)
-  .center(-60, 100)
-  .addTo(draw)
+function pre20() {
+  subtitles.textContent = 'И поместим в систему координат'
+  D.coord().opacity(0)
+  .centerCoord(-55, -73, 5.5)
+  D.unitCircle()
+  .radius(50)
+  .center(53, 48)
+
+  let k = ease()
+
+  shot10()
+  function shot10() {
+    let op = k()
+    D.coord().opacity(op)
+    if (op < 1) {
+      window.requestAnimationFrame(shot10)
+      return
+    }
+    D.coord().opacity(1)
+    pre30()
+  }
+}
+
+function pre30() {
+  subtitles.textContent = 'В самый центр'
+  D.coord()
+  .centerCoord(-55, -73, 5.5)
+  D.unitCircle()
+  .radius(50)
+  .center(53, 48)
+
+  shot10()
+  function shot10() {
+    
+  }
+}
+
+  // subtitles.textContent = 'Возьмем систему координат'
+  // subtitles.textContent = 'И поместим в систему координат'
+  // subtitles.textContent = 'Возьмем круг'
