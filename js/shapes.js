@@ -2,22 +2,41 @@
 // TODO sizes for coord
 
 SVG.extend(SVG.G, {
-  centerAxes: function(x, y) {
-    this.children()[0].center(0, y)
-    this.children()[1].center(x, 0)
-    return this
+  centerAxes: function(
+    cx = this.attr('cx'),
+    cy = this.attr('cy'),
+  ) {
+    this.children()[0].center(0, cy)
+    this.children()[1].center(cx, 0)
+    return this.attr({cx: cx, cy: cy})
   },
 
 
-  centerLabels: function(x, y) {
-    this.children()[0].center(112, y-7)
-    this.children()[1].center(x+7, 112)
-    this.children()[2].center(x+6, y-7)
-    return this
+  centelLabel: function(
+    cx = this.attr('cx'),
+    cy = this.attr('cy'),
+  ) {
+    this.center(cx, cy)
+    return this.attr({cx: cx, cy: cy})
   },
 
 
-  centerPlane: function(cx = 0, cy = 0, scope = 1) {
+  centerAxesLabels: function(
+    cx = this.attr('cx'),
+    cy = this.attr('cy'),
+  ) {
+    this.children()[0].center(112, cy-7)
+    this.children()[1].center(cx+7, 112)
+    this.children()[2].center(cx+6, cy-7)
+    return this.attr({cx: cx, cy: cy})
+  },
+
+
+  centerPlane: function(
+    cx = this.attr('cx'),
+    cy = this.attr('cy'),
+    scope = this.attr('scope'),
+  ) {
     const xg = this.children()[0]
         , yg = this.children()[1]
         , delta = 100 / scope
@@ -29,25 +48,25 @@ SVG.extend(SVG.G, {
       x = y = i * delta
       if (x + cx < 100) {
         typeof xg.children()[nx] === 'undefined'
-        ? xg.add(coordLines.x.clone().center(x + cx, 0))
+        ? xg.add(Shape.coordLines().x.clone().center(x + cx, 0))
         : xg.children()[nx].center(x + cx, 0)
         nx++
       }
       if (i > 0 && -x + cx > -100) {
         typeof xg.children()[nx] === 'undefined'
-        ? xg.add(coordLines.x.clone().center(-x + cx, 0))
+        ? xg.add(Shape.coordLines().x.clone().center(-x + cx, 0))
         : xg.children()[nx].center(-x + cx, 0)
         nx++
       }
       if (y + cy < 100) {
         typeof yg.children()[ny] === 'undefined'
-        ? yg.add(coordLines.y.clone().center(0, y + cy))
+        ? yg.add(Shape.coordLines().y.clone().center(0, y + cy))
         : yg.children()[ny].center(0, y + cy)
         ny++
       }
       if (i > 0 && -y + cy > -100) {
         typeof yg.children()[ny] === 'undefined'
-        ? yg.add(coordLines.y.clone().center(0, -y + cy))
+        ? yg.add(Shape.coordLines().y.clone().center(0, -y + cy))
         : yg.children()[ny].center(0, -y + cy)
         ny++
       }
@@ -60,18 +79,22 @@ SVG.extend(SVG.G, {
       yg.children().at(-1).remove()
     }
 
-    return this
+    return this.attr({cx: cx, cy: cy, scope: scope})
   },
 
 
-  centerCoord: function(cx = 0, cy = 0, scope = 1) {
+  centerCoord: function(
+    cx = this.attr('cx'),
+    cy = this.attr('cy'),
+    scope = this.attr('scope'),
+  ) {
     const plane = this.children()[0]
         , axes = this.children()[1]
         , labels = this.children()[2]
     plane.centerPlane(cx, cy, scope)
     axes.centerAxes(cx, cy)
-    labels.centerLabels(cx, cy)
-    return this
+    labels.centerAxesLabels(cx, cy)
+    return this.attr({cx: cx, cy: cy, scope: scope})
   }
 })
 
@@ -115,6 +138,11 @@ function spinXY(cx, cy, r, a) {
 }
 
 
+// ### Shape ###
+
+const Shape = (function() {
+const gg = display.group()
+
 function dot() {
   return new SVG.Circle()
   .radius(1)
@@ -122,13 +150,13 @@ function dot() {
 }
 
 
-function label(str) {
+function label(str = '') {
   return new SVG.G()
   .add(
     new SVG.Text()
     .text(str)
     .scale(1, -1)
-  ).fill('white')
+  ).fill('white').stroke('none')
 }
 
 
@@ -137,7 +165,7 @@ function axesLabels(cx = 0, cy = 0) {
   .add(label('x').center(112, -7))
   .add(label('y').center(7, 112))
   .add(label('0').center(6, -6))
-  // .centerLabels(cx, cy)
+  // .centerAxesLabels(cx, cy)
 }
 
 
@@ -230,6 +258,24 @@ function coord(cx = 0, cy = 0, scope = 1) {
     .add(axesLabels(cx, cy).stroke('none'))
 }
 
+
+function drawOnce(shape) {
+  if (shape.root() !== null) return shape
+  return shape.addTo(gg)
+}
+
+return {
+  dot: () => drawOnce(dot()),
+  label: (str = '') => drawOnce(label(str)),
+  axesLabels: (cx = 0, cy = 0) => drawOnce(axesLabels(cx, cy)),
+  arrow: (x1, y1, x2, y2) => drawOnce(arrow(x1, y1, x2, y2)),
+  arc: (a1 = 0, a2 = pi2) => drawOnce(arc(a1, a2)),
+  coordLines: () => coordLines,
+  coordPlane: (cx = 0, cy = 0, scope = 1) => drawOnce(coordPlane(cx, cy, scope)),
+  coord: (cx = 0, cy = 0, scope = 1) => drawOnce(coord(cx, cy, scope)),
+  clear: function() { gg.children().remove() }
+}
+})()
 
 // const gr = display.group() // DEV
 // .add(dot().fill('black'))
