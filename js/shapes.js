@@ -6,8 +6,8 @@ SVG.extend(SVG.G, {
     cx = this.data('cx'),
     cy = this.data('cy'),
   ) {
-    this.findOne('#' + this.data('ax')).center(0, cy)
-    this.findOne('#' + this.data('ay')).center(cx, 0)
+    this.findOne('#axisX').center(0, cy)
+    this.findOne('#axisY').center(cx, 0)
     return this.data({cx: cx, cy: cy})
   },
 
@@ -25,9 +25,9 @@ SVG.extend(SVG.G, {
     cx = this.data('cx'),
     cy = this.data('cy'),
   ) {
-    const lX = this.findOne('#' + this.data('lX'))
-        , lY = this.findOne('#' + this.data('lY'))
-        , l0 = this.findOne('#' + this.data('l0'))
+    const lX = this.findOne('#labelX')
+        , lY = this.findOne('#labelY')
+        , l0 = this.findOne('#label0')
     lX.center(112, cy-7)
     lY.center(cx+7, 112)
     l0.center(cx+6, cy-7)
@@ -40,8 +40,8 @@ SVG.extend(SVG.G, {
     cy = this.data('cy'),
     scope = this.data('scope'),
   ) {
-    const xg = this.findOne('#' + this.data('xg'))
-        , yg = this.findOne('#' + this.data('yg'))
+    const linesX = this.findOne('#linesX')
+        , linesY = this.findOne('#linesY')
         , delta = 100 / scope
     let x, y, nx = 0, ny = 0
     cx %= delta
@@ -50,36 +50,36 @@ SVG.extend(SVG.G, {
     for (let i = 0; i < scope * 2 + 2; i++) {
       x = y = i * delta
       if (x + cx < 100) {
-        typeof xg.children()[nx] === 'undefined'
-        ? xg.add(Shape.coordLines().x.clone().center(x + cx, 0))
-        : xg.children()[nx].center(x + cx, 0)
+        typeof linesX.children()[nx] === 'undefined'
+        ? linesX.add(Shape.coordLines().x.clone().center(x + cx, 0))
+        : linesX.children()[nx].center(x + cx, 0)
         nx++
       }
       if (i > 0 && -x + cx > -100) {
-        typeof xg.children()[nx] === 'undefined'
-        ? xg.add(Shape.coordLines().x.clone().center(-x + cx, 0))
-        : xg.children()[nx].center(-x + cx, 0)
+        typeof linesX.children()[nx] === 'undefined'
+        ? linesX.add(Shape.coordLines().x.clone().center(-x + cx, 0))
+        : linesX.children()[nx].center(-x + cx, 0)
         nx++
       }
       if (y + cy < 100) {
-        typeof yg.children()[ny] === 'undefined'
-        ? yg.add(Shape.coordLines().y.clone().center(0, y + cy))
-        : yg.children()[ny].center(0, y + cy)
+        typeof linesY.children()[ny] === 'undefined'
+        ? linesY.add(Shape.coordLines().y.clone().center(0, y + cy))
+        : linesY.children()[ny].center(0, y + cy)
         ny++
       }
       if (i > 0 && -y + cy > -100) {
-        typeof yg.children()[ny] === 'undefined'
-        ? yg.add(Shape.coordLines().y.clone().center(0, -y + cy))
-        : yg.children()[ny].center(0, -y + cy)
+        typeof linesY.children()[ny] === 'undefined'
+        ? linesY.add(Shape.coordLines().y.clone().center(0, -y + cy))
+        : linesY.children()[ny].center(0, -y + cy)
         ny++
       }
     }
 
-    while (nx < xg.children().length) {
-      xg.children().at(-1).remove()
+    while (nx < linesX.children().length) {
+      linesX.children().at(-1).remove()
     }
-    while (ny < yg.children().length) {
-      yg.children().at(-1).remove()
+    while (ny < linesY.children().length) {
+      linesY.children().at(-1).remove()
     }
 
     return this.data({cx: cx, cy: cy, scope: scope})
@@ -91,9 +91,9 @@ SVG.extend(SVG.G, {
     cy = this.data('cy'),
     scope = this.data('scope'),
   ) {
-    const plane = this.findOne('#' + this.data('plane'))
-        , axes = this.findOne('#' + this.data('axes'))
-        , labels = this.findOne('#' + this.data('labels'))
+    const plane = this.findOne('#plane')
+        , axes = this.findOne('#axes')
+        , labels = this.findOne('#labels')
     plane.centerPlane(cx, cy, scope)
     axes.centerAxes(cx, cy)
     labels.centerAxesLabels(cx, cy)
@@ -122,10 +122,7 @@ SVG.extend(SVG.Circle, {
       .attr({
         'stroke-dasharray': dash,
         'stroke-dashoffset': -a1})
-      .data({
-        a1: a1,
-        a2: a2,
-      })
+      .data({a1: a1, a2: a2})
   }
 })
 
@@ -171,21 +168,18 @@ function label(str = '') {
 
 
 function axesLabels(cx = 0, cy = 0) {
-  const lX = label('x').center(112, -7)
-      , lY = label('y').center(7, 112)
-      , l0 = label('0').center(6, -6)
+  const lX = label('x').center(112, -7).id('labelX')
+      , lY = label('y').center(7, 112).id('labelY')
+      , l0 = label('0').center(6, -6).id('label0')
   return new SVG.G()
   .add(lX)
   .add(lY)
   .add(l0)
-  .data('lX', lX, true)
-  .data('lY', lY, true)
-  .data('l0', l0, true)
   // .centerAxesLabels(cx, cy)
 }
 
 
-//
+// [1, 2].
 
 
 function arrow(x1, y1, x2, y2) {
@@ -214,15 +208,13 @@ function coordAxes(cx = 0, cy = 0) {
   const
     ax = new SVG.Path().plot(
       arrow(-115, cy, 115, cy)
-    )
+    ).id('axisX')
   , ay = new SVG.Path().plot(
       arrow(cx, -115, cx, 115)
-    )
+    ).id('axisY')
   return new SVG.G()
     .add(ax)
     .add(ay)
-    .data('ax', ax, true)
-    .data('ay', ay, true)
     .fill('white')
 }
 
@@ -234,8 +226,8 @@ const coordLines = {
 
 
 function coordPlane(cx = 0, cy = 0, scope = 1) {
-  const xg = new SVG.G()
-      , yg = new SVG.G()
+  const linesX = new SVG.G().id('linesX')
+      , linesY = new SVG.G().id('linesY')
       , gg = new SVG.G()
       , delta = 100 / scope
   let x, y
@@ -245,23 +237,21 @@ function coordPlane(cx = 0, cy = 0, scope = 1) {
   for (let i = 0; i < scope * 2 + 2; i++) {
     x = y = i * delta
     if (x + cx < 100) {
-      xg.add(coordLines.x.clone().center(x + cx, 0))
+      linesX.add(coordLines.x.clone().center(x + cx, 0))
     }
     if (i > 0 && -x + cx > -100) {
-      xg.add(coordLines.x.clone().center(-x + cx, 0))
+      linesX.add(coordLines.x.clone().center(-x + cx, 0))
     }
     if (y + cy < 100) {
-      yg.add(coordLines.y.clone().center(0, y + cy))
+      linesY.add(coordLines.y.clone().center(0, y + cy))
     }
     if (i > 0 && -y + cy > -100) {
-      yg.add(coordLines.y.clone().center(0, -y + cy))
+      linesY.add(coordLines.y.clone().center(0, -y + cy))
     }
   }
   return gg
-    .add(xg)
-    .add(yg)
-    .data('xg', xg, true)
-    .data('yg', yg, true)
+    .add(linesX)
+    .add(linesY)
     .stroke('grey')
 }
 
@@ -272,25 +262,20 @@ function arc(a1 = 0, a2 = pi2) {
   .arcAngles(a1, a2)
   .attr({
     pathLength: pi2})
-  .data({
-    a1: a1,
-    a2: a2,
-  })
+  .data({a1: a1, a2: a2})
 }
 
 
 function coord(cx = 0, cy = 0, scope = 1) {
-  const plane = coordPlane(cx, cy, scope)
-      , axes = coordAxes(cx, cy)
-      , labels = axesLabels(cx, cy).stroke('none')
+  const plane = coordPlane(cx, cy, scope).id('plane')
+      , axes = coordAxes(cx, cy).id('axes')
+      , labels = axesLabels(cx, cy).id('labels')
+          .stroke('none')
   return new SVG.G()
     .add(plane)
     .add(axes)
     .add(labels)
     .data({cx: cx, cy: cy, scope: scope})
-    .data('plane', plane, true)
-    .data('axes', axes, true)
-    .data('labels', labels, true)
 }
 
 
@@ -308,7 +293,7 @@ return {
   coordLines: () => coordLines,
   coordPlane: (cx = 0, cy = 0, scope = 1) => drawOnce(coordPlane(cx, cy, scope)),
   coord: (cx = 0, cy = 0, scope = 1) => drawOnce(coord(cx, cy, scope)),
-  clear: () => gg.children().remove()
+  clear: () => gg.clear()
 }
 })()
 

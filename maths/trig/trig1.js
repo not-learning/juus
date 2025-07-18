@@ -38,7 +38,7 @@ function pre20() {
   Shape.clear()
   const crd = Shape.coord()
     .opacity(0)
-    .centerCoord(0, 0, 3.5)
+    .centerCoord(10, 20, 3.5)
   const uc = D.unitCircle()
     .radius(50)
     .center(53, 48)
