@@ -3,39 +3,39 @@
 
 SVG.extend(SVG.G, {
   centerAxes: function(
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
+    cx = this.data('cx'),
+    cy = this.data('cy'),
   ) {
     this.children()[0].center(0, cy)
     this.children()[1].center(cx, 0)
-    return this.attr({cx: cx, cy: cy})
+    return this.data({cx: cx, cy: cy})
   },
 
 
   centelLabel: function(
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
+    cx = this.data('cx'),
+    cy = this.data('cy'),
   ) {
     this.center(cx, cy)
-    return this.attr({cx: cx, cy: cy})
+    return this.data({cx: cx, cy: cy})
   },
 
 
   centerAxesLabels: function(
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
+    cx = this.data('cx'),
+    cy = this.data('cy'),
   ) {
     this.children()[0].center(112, cy-7)
     this.children()[1].center(cx+7, 112)
     this.children()[2].center(cx+6, cy-7)
-    return this.attr({cx: cx, cy: cy})
+    return this.data({cx: cx, cy: cy})
   },
 
 
   centerPlane: function(
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
-    scope = this.attr('scope'),
+    cx = this.data('cx'),
+    cy = this.data('cy'),
+    scope = this.data('scope'),
   ) {
     const xg = this.children()[0]
         , yg = this.children()[1]
@@ -79,14 +79,14 @@ SVG.extend(SVG.G, {
       yg.children().at(-1).remove()
     }
 
-    return this.attr({cx: cx, cy: cy, scope: scope})
+    return this.data({cx: cx, cy: cy, scope: scope})
   },
 
 
   centerCoord: function(
-    cx = this.attr('cx'),
-    cy = this.attr('cy'),
-    scope = this.attr('scope'),
+    cx = this.data('cx'),
+    cy = this.data('cy'),
+    scope = this.data('scope'),
   ) {
     const plane = this.children()[0]
         , axes = this.children()[1]
@@ -94,7 +94,7 @@ SVG.extend(SVG.G, {
     plane.centerPlane(cx, cy, scope)
     axes.centerAxes(cx, cy)
     labels.centerAxesLabels(cx, cy)
-    return this.attr({cx: cx, cy: cy, scope: scope})
+    return this.data({cx: cx, cy: cy, scope: scope})
   }
 })
 
@@ -102,8 +102,8 @@ SVG.extend(SVG.G, {
 // TODO think: named parameters
 SVG.extend(SVG.Circle, {
   arcAngles: function(
-    a1 = this.attr('a1'),
-    a2 = this.attr('a2'),
+    a1 = this.data('a1'),
+    a2 = this.data('a2'),
   ) {
     const dif = (a2 - a1) % pi2
     let dash = [dif, pi2 - dif]
@@ -118,7 +118,8 @@ SVG.extend(SVG.Circle, {
     return this
       .attr({
         'stroke-dasharray': dash,
-        'stroke-dashoffset': -a1,
+        'stroke-dashoffset': -a1})
+      .data({
         a1: a1,
         a2: a2,
       })
@@ -253,7 +254,8 @@ function arc(a1 = 0, a2 = pi2) {
   return new SVG.Circle()
   .arcAngles(a1, a2)
   .attr({
-    pathLength: pi2,
+    pathLength: pi2})
+  .data({
     a1: a1,
     a2: a2,
   })

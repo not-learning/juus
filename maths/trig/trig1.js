@@ -69,8 +69,8 @@ function pre30() {
 
   uc.mousedown((ev) => 
     uc.mousemove((e) => {
-      const crd = ctmInv(e.x, e.y)
-      uc.center(crd.x, crd.y)
+      const ep = ctmInv(e.x, e.y)
+      uc.center(ep.x, ep.y)
   }))
   uc.on('mouseup mouseout', () => uc.mousemove(null))
 
