@@ -10,7 +10,7 @@ const D = {
 
 
 // ### Shots ###
-function pre10() {
+function scene10() {
   subtitles.textContent = 'Возьмем круг'
   Shape.clear()
   const uc = D.unitCircle()
@@ -28,12 +28,12 @@ function pre10() {
       window.requestAnimationFrame(shot10)
       return
     }
-    pre20()
+    scene20()
   }
 }
 
 
-function pre20() {
+function scene20() {
   subtitles.textContent = 'и систему координат'
   Shape.clear()
   const crd = Shape.coord()
@@ -53,12 +53,12 @@ function pre20() {
       window.requestAnimationFrame(shot10)
       return
     }
-    pre30()
+    scene30()
   }
 }
 
 // TODO
-function pre30() {
+function scene30() {
   subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
   Shape.clear()
   const crd = Shape.coord()
@@ -79,11 +79,11 @@ function pre30() {
     uc.center(crd.x, crd.y)
   })
 
-  // if (true) pre40()
+  // if (true) scene40()
 }
 
 
-function pre40() {
+function scene40() {
   subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
   Shape.clear()
   const crd = Shape.coord()
@@ -95,40 +95,4 @@ function pre40() {
 }
 
 
-pre10()
-
-// function pre30() {
-//   subtitles.textContent = 'В самый центр'
-//   Shape.clear()
-//   const crd = Shape.coord()
-//     .centerCoord(0, 0, 3.5)
-//   const uc = D.unitCircle()
-//     .radius(50)
-//     .center(53, 48)
-
-//   let eez = ease()
-//     , startCrdX = crd.attr('cx')
-//     , startCrdY = crd.attr('cy')
-//     , startUcX = uc.attr('cx')
-//     , startUcY = uc.attr('cy')
-
-//   shot10()
-//   function shot10() {
-//     const k = eez()
-//       , crdX = myAnim(k, startCrdX, 0)
-//       , crdY = myAnim(k, startCrdY, 0)
-//       , ucX = myAnim(k, startUcX, 0)
-//       , ucY = myAnim(k, startUcY, 0)
-//     crd.centerCoord(crdX, crdY)
-//     uc.center(ucX, ucY)
-//     if (k < 1) {
-//       window.requestAnimationFrame(shot10)
-//       return
-//     }
-//     console.log('done')
-//   }
-// }
-
-// subtitles.textContent = 'Возьмем систему координат'
-// subtitles.textContent = 'И поместим в систему координат'
-// subtitles.textContent = 'Возьмем круг'
+scene10()
