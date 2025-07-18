@@ -6,8 +6,8 @@ SVG.extend(SVG.G, {
     cx = this.data('cx'),
     cy = this.data('cy'),
   ) {
-    this.children()[0].center(0, cy)
-    this.children()[1].center(cx, 0)
+    this.findOne('#' + this.data('ax')).center(0, cy)
+    this.findOne('#' + this.data('ay')).center(cx, 0)
     return this.data({cx: cx, cy: cy})
   },
 
@@ -25,9 +25,12 @@ SVG.extend(SVG.G, {
     cx = this.data('cx'),
     cy = this.data('cy'),
   ) {
-    this.children()[0].center(112, cy-7)
-    this.children()[1].center(cx+7, 112)
-    this.children()[2].center(cx+6, cy-7)
+    const lX = this.findOne('#' + this.data('lX'))
+        , lY = this.findOne('#' + this.data('lY'))
+        , l0 = this.findOne('#' + this.data('l0'))
+    lX.center(112, cy-7)
+    lY.center(cx+7, 112)
+    l0.center(cx+6, cy-7)
     return this.data({cx: cx, cy: cy})
   },
 
@@ -37,8 +40,8 @@ SVG.extend(SVG.G, {
     cy = this.data('cy'),
     scope = this.data('scope'),
   ) {
-    const xg = this.children()[0]
-        , yg = this.children()[1]
+    const xg = this.findOne('#' + this.data('xg'))
+        , yg = this.findOne('#' + this.data('yg'))
         , delta = 100 / scope
     let x, y, nx = 0, ny = 0
     cx %= delta
@@ -88,9 +91,9 @@ SVG.extend(SVG.G, {
     cy = this.data('cy'),
     scope = this.data('scope'),
   ) {
-    const plane = this.children()[0]
-        , axes = this.children()[1]
-        , labels = this.children()[2]
+    const plane = this.findOne('#' + this.data('plane'))
+        , axes = this.findOne('#' + this.data('axes'))
+        , labels = this.findOne('#' + this.data('labels'))
     plane.centerPlane(cx, cy, scope)
     axes.centerAxes(cx, cy)
     labels.centerAxesLabels(cx, cy)
@@ -168,10 +171,16 @@ function label(str = '') {
 
 
 function axesLabels(cx = 0, cy = 0) {
+  const lX = label('x').center(112, -7)
+      , lY = label('y').center(7, 112)
+      , l0 = label('0').center(6, -6)
   return new SVG.G()
-  .add(label('x').center(112, -7))
-  .add(label('y').center(7, 112))
-  .add(label('0').center(6, -6))
+  .add(lX)
+  .add(lY)
+  .add(l0)
+  .data('lX', lX, true)
+  .data('lY', lY, true)
+  .data('l0', l0, true)
   // .centerAxesLabels(cx, cy)
 }
 
@@ -202,13 +211,19 @@ function arrow(x1, y1, x2, y2) {
 
 
 function coordAxes(cx = 0, cy = 0) {
+  const
+    ax = new SVG.Path().plot(
+      arrow(-115, cy, 115, cy)
+    )
+  , ay = new SVG.Path().plot(
+      arrow(cx, -115, cx, 115)
+    )
   return new SVG.G()
-  .add(new SVG.Path().plot(
-    arrow(-115, cy, 115, cy)
-  ))
-  .add(new SVG.Path().plot(
-    arrow(cx, -115, cx, 115)
-  )).fill('white')
+    .add(ax)
+    .add(ay)
+    .data('ax', ax, true)
+    .data('ay', ay, true)
+    .fill('white')
 }
 
 
@@ -222,9 +237,6 @@ function coordPlane(cx = 0, cy = 0, scope = 1) {
   const xg = new SVG.G()
       , yg = new SVG.G()
       , gg = new SVG.G()
-       .add(xg)
-       .add(yg)
-       .stroke('grey')
       , delta = 100 / scope
   let x, y
   cx %= delta
@@ -246,6 +258,11 @@ function coordPlane(cx = 0, cy = 0, scope = 1) {
     }
   }
   return gg
+    .add(xg)
+    .add(yg)
+    .data('xg', xg, true)
+    .data('yg', yg, true)
+    .stroke('grey')
 }
 
 
@@ -263,10 +280,17 @@ function arc(a1 = 0, a2 = pi2) {
 
 
 function coord(cx = 0, cy = 0, scope = 1) {
+  const plane = coordPlane(cx, cy, scope)
+      , axes = coordAxes(cx, cy)
+      , labels = axesLabels(cx, cy).stroke('none')
   return new SVG.G()
-    .add(coordPlane(cx, cy, scope))
-    .add(coordAxes(cx, cy))
-    .add(axesLabels(cx, cy).stroke('none'))
+    .add(plane)
+    .add(axes)
+    .add(labels)
+    .data({cx: cx, cy: cy, scope: scope})
+    .data('plane', plane, true)
+    .data('axes', axes, true)
+    .data('labels', labels, true)
 }
 
 
@@ -284,7 +308,7 @@ return {
   coordLines: () => coordLines,
   coordPlane: (cx = 0, cy = 0, scope = 1) => drawOnce(coordPlane(cx, cy, scope)),
   coord: (cx = 0, cy = 0, scope = 1) => drawOnce(coord(cx, cy, scope)),
-  clear: function() { gg.children().remove() }
+  clear: () => gg.children().remove()
 }
 })()
 
