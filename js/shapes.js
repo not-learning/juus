@@ -138,6 +138,12 @@ function spinXY(cx, cy, r, a) {
 }
 
 
+function ctmInv(x, y) {
+  let pt = new SVG.Point(x, y)
+  return pt.transform(display.screenCTM().inverse())
+}
+
+
 // ### Shape ###
 
 const Shape = (function() {
@@ -167,6 +173,9 @@ function axesLabels(cx = 0, cy = 0) {
   .add(label('0').center(6, -6))
   // .centerAxesLabels(cx, cy)
 }
+
+
+//
 
 
 function arrow(x1, y1, x2, y2) {
