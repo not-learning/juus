@@ -1,7 +1,7 @@
 "use strict";
 // TODO sizes for coord?
 
-function spinXY(cx, cy, r, a) {
+export function spinXY(cx, cy, r, a) {
   return [
     Math.cos(a) * r + cx,
     Math.sin(a) * r + cy,
@@ -9,13 +9,7 @@ function spinXY(cx, cy, r, a) {
 }
 
 
-function ctmInv(x, y) {
-  let pt = new SVG.Point(x, y)
-  return pt.transform(display.screenCTM().inverse())
-}
-
-
-function coordList(cx = 0, cy = 0, scope = 1) {
+export function coordList(cx = 0, cy = 0, scope = 1) {
   const xx = {}
     , yy = {}
     , delta = 100 / scope
