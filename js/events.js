@@ -6,7 +6,7 @@ function ctmInv(x, y) {
 }
 
 
-display.mousedown((e) => e.preventDefault())
+display.on('mousedown', (e) => e.preventDefault())
 
 
 export function drag(el, fn) {

@@ -74,8 +74,58 @@ function scene30() {
     .center(53, 48)
     .stroke('mediumspringgreen')
     .fill('transparent')
+  const bb = display.button('Готово!')
+    .center(50, -110)
+    .act(el => {
+      const cx = Math.abs(uc.attr('cx'))
+        , cy = Math.abs(uc.attr('cy'))
+      switch (true) {
+        case cx < 1 && cy < 1:
+          scene30exact(); break
+        case cx < 5 && cy < 5:
+          scene30near(cx, cy); break
+        default:
+          scene30other(cx, cy)
+      }
+    })
 
   Ev.drag(uc, (x, y) => uc.center(x, y))
+}
+
+
+function scene30exact() {
+  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
+  display.clear()
+  const plane = display.plane(Sh.coordList(0, 0, 3.5))
+  const uc = display.arc()
+    .radius(50)
+    .center(53, 48)
+    .stroke('mediumspringgreen')
+    .fill('transparent')
+}
+
+
+function scene30near(cx, cy) {
+  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
+  display.clear()
+  const plane = display.plane(Sh.coordList(0, 0, 3.5))
+  const uc = display.arc()
+    .radius(50)
+    .center(cx, cy)
+    .stroke('mediumspringgreen')
+    .fill('transparent')
+}
+
+
+function scene30other(cx, cy) {
+  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
+  display.clear()
+  const plane = display.plane(Sh.coordList(0, 0, 3.5))
+  const uc = display.arc()
+    .radius(50)
+    .center(cx, cy)
+    .stroke('mediumspringgreen')
+    .fill('transparent')
 }
 
 
