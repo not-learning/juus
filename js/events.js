@@ -6,7 +6,7 @@ function ctmInv(x, y) {
 }
 
 
-display.on('mousedown', (e) => e.preventDefault())
+display.css('touch-action', 'none')
 
 
 export function drag(el, fn) {
@@ -14,13 +14,12 @@ export function drag(el, fn) {
 
   el.pointerdown((e) => {
     el.css({cursor: 'grabbing'})
-    e.preventDefault()
     el.pointermove((ev) => {
-      ev.preventDefault()
       const ep = ctmInv(ev.x, ev.y)
       fn(ep.x, ep.y)
   })})
-  el.on('pointerup pointerleave', () => {
+
+  el.on('pointerup pointerleave', (ev) => {
     el.css({cursor: 'grab'})
     el.pointermove(null)
   })

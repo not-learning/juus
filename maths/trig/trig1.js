@@ -5,23 +5,27 @@ import * as El from '/js/elements.js'
 import * as Ev from '/js/events.js'
 import * as Sh from '/js/shapes.js'
 
+const concise = false
+
+
 // ### Drawings ###
-// const D = {
-//   unitCircle: () => Shape.arc()
-//     .radius(100)
-//     .stroke('mediumspringgreen')
-//     .fill('transparent')
-// }
+const D = {
+  uc: () => display.arc() // unit circle
+    .radius(100)
+    .center(0, 0)
+    .stroke('mediumspringgreen')
+    .fill('transparent')
+}
+
 
 // ### Scenes ###
 function scene10() {
   subtitles.textContent = 'Возьмем круг'
   display.clear()
 
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(53, 48)
-    .stroke('mediumspringgreen')
 
   const k = Anim.ease()
   let ang = 0
@@ -45,10 +49,9 @@ function scene20() {
 
   const plane = display.plane(Sh.coordList(1, 1, 3.5))
     .opacity(0)
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(53, 48)
-    .stroke('mediumspringgreen')
 
   const k = Anim.ease()
 
@@ -60,25 +63,29 @@ function scene20() {
       window.requestAnimationFrame(shot10)
       return
     }
-    scene30()
+    if (concise) {
+      scene40()
+    } else {
+      scene30()
+    }
   }
 }
 
 
+// TODO Scenes 30
 function scene30() {
   subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(53, 48)
-    .stroke('mediumspringgreen')
-    .fill('transparent')
+  const cx = Math.abs(uc.attr('cx'))
+    , cy = Math.abs(uc.attr('cy'))
+
   const bb = display.button('Готово!')
     .center(50, -110)
     .act(el => {
-      const cx = Math.abs(uc.attr('cx'))
-        , cy = Math.abs(uc.attr('cy'))
       switch (true) {
         case cx < 1 && cy < 1:
           scene30near(cx, cy, true); break
@@ -99,11 +106,9 @@ function scene30near(cx, cy, at0) {
     : 'Ну, почти.'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(cx, cy)
-    .stroke('mediumspringgreen')
-    .fill('transparent')
 
   const ez = Anim.ease()
 
@@ -125,11 +130,9 @@ function scene30other(cx, cy) {
   subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(cx, cy)
-    .stroke('mediumspringgreen')
-    .fill('transparent')
 }
 
 
@@ -137,10 +140,10 @@ function scene40() {
   subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
-  const uc = display.arc()
+  const uc = D.uc()
     .radius(50)
     .center(53, 48)
 }
 
 
-scene30()
+scene10()
