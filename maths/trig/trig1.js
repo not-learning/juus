@@ -23,8 +23,8 @@ function scene10() {
     .center(53, 48)
     .stroke('mediumspringgreen')
 
+  const k = Anim.ease()
   let ang = 0
-    , k = Anim.ease()
 
   shot10()
   function shot10() {
@@ -50,7 +50,7 @@ function scene20() {
     .center(53, 48)
     .stroke('mediumspringgreen')
 
-  let k = Anim.ease()
+  const k = Anim.ease()
 
   shot10()
   function shot10() {
@@ -81,9 +81,9 @@ function scene30() {
         , cy = Math.abs(uc.attr('cy'))
       switch (true) {
         case cx < 1 && cy < 1:
-          scene30exact(); break
+          scene30near(cx, cy, true); break
         case cx < 5 && cy < 5:
-          scene30near(cx, cy); break
+          scene30near(cx, cy, false); break
         default:
           scene30other(cx, cy)
       }
@@ -93,20 +93,10 @@ function scene30() {
 }
 
 
-function scene30exact() {
-  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
-  display.clear()
-  const plane = display.plane(Sh.coordList(0, 0, 3.5))
-  const uc = display.arc()
-    .radius(50)
-    .center(53, 48)
-    .stroke('mediumspringgreen')
-    .fill('transparent')
-}
-
-
-function scene30near(cx, cy) {
-  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
+function scene30near(cx, cy, at0) {
+  subtitles.textContent = at0
+    ? 'В самый центр, верно!'
+    : 'Ну, почти.'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
   const uc = display.arc()
@@ -114,6 +104,20 @@ function scene30near(cx, cy) {
     .center(cx, cy)
     .stroke('mediumspringgreen')
     .fill('transparent')
+
+  const ez = Anim.ease()
+
+  shot10()
+  function shot10() {
+    let k = ez()
+      , x = Anim.ksf(k, cx, 0)
+      , y = Anim.ksf(k, cy, 0)
+    uc.center(x, y)
+    if (k < 1) {
+      window.requestAnimationFrame(shot10)
+      return
+    }
+  }
 }
 
 
@@ -139,4 +143,4 @@ function scene40() {
 }
 
 
-scene10()
+scene30()

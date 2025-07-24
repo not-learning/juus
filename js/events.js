@@ -10,17 +10,18 @@ display.on('mousedown', (e) => e.preventDefault())
 
 
 export function drag(el, fn) {
-  el.mousedown((e) => {
+  el.css({cursor: 'grab'})
+
+  el.pointerdown((e) => {
+    el.css({cursor: 'grabbing'})
     e.preventDefault()
-    el.mousemove((ev) => {
+    el.pointermove((ev) => {
       ev.preventDefault()
       const ep = ctmInv(ev.x, ev.y)
       fn(ep.x, ep.y)
   })})
-  el.on('mouseup mouseout', () => el.mousemove(null))
-
-  el.touchmove((e) => {
-    const ep = ctmInv(e.touches[0].clientX, e.touches[0].clientY)
-    fn(ep.x, ep.y)
+  el.on('pointerup pointerleave', () => {
+    el.css({cursor: 'grab'})
+    el.pointermove(null)
   })
 }
