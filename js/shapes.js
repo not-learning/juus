@@ -70,6 +70,7 @@ SVG.Label = class extends SVG.Text {
     if (typeof str === 'undefined') return super.text()
     const txt = super.text(str)
     return txt
+      .font({ size: 5 })
       .stroke('none')
       .matrix(1, 0, 0, -1, 0, 0)
   }

@@ -1,26 +1,23 @@
 "use strict";
 
 function ctmInv(x, y) {
-  let pt = new SVG.Point(x, y)
-  return pt.transform(display.screenCTM().inverse())
+  return new SVG.Point(x, y)
+    .transform(display.screenCTM().inverse())
 }
 
 
 display.css('touch-action', 'none')
 
+// TODO all events on display, not element
+export function drag(el, func) {
+  el.css({cursor: 'crosshair'})
 
-export function drag(el, fn) {
-  el.css({cursor: 'grab'})
-
-  el.pointerdown((e) => {
-    el.css({cursor: 'grabbing'})
-    el.pointermove((ev) => {
+  function fn(ev) {
       const ep = ctmInv(ev.x, ev.y)
-      fn(ep.x, ep.y)
-  })})
+      func(ep.x, ep.y)
+  }
 
-  el.on('pointerup pointerleave', (ev) => {
-    el.css({cursor: 'grab'})
-    el.pointermove(null)
-  })
+  el.pointerdown((e) => display.pointermove(fn))
+  display.on('pointerup pointerleave pointercancel', () => display.off('pointermove', fn))
+  return el
 }

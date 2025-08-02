@@ -34,8 +34,9 @@ SVG.Button = class extends SVG.G {
   }
 
   center(cx, cy) {
-    return super
-      .center(cx, cy)
+    this.rct.center(cx, cy)
+    this.lbl.center(cx, cy)
+    return this
       .attr({cx: cx, cy: cy})
   }
 }

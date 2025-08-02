@@ -4,28 +4,20 @@ import * as Anim from '/js/anim.js'
 import * as El from '/js/elements.js'
 import * as Ev from '/js/events.js'
 import * as Sh from '/js/shapes.js'
+import * as Dr from '/js/draw.js'
 
 const concise = false
 
 
 // ### Drawings ###
-const D = {
-  uc: () => display.arc() // unit circle
-    .radius(100)
-    .center(0, 0)
-    .stroke('mediumspringgreen')
-    .fill('transparent')
-}
-
-
+const D = {}
+// scene10()
 // ### Scenes ###
 function scene10() {
-  subtitles.textContent = 'Возьмем круг'
+  subtitles.textContent = 'Представь весы'
   display.clear()
 
-  const uc = D.uc()
-    .radius(50)
-    .center(53, 48)
+  const cup = display.path('M -10 20 ')
 
   const k = Anim.ease()
   let ang = 0
@@ -33,7 +25,6 @@ function scene10() {
   shot10()
   function shot10() {
     ang = k() * pi2
-    uc.draw(0, ang)
     if (ang < pi2) {
       window.requestAnimationFrame(shot10)
       return
@@ -44,14 +35,9 @@ function scene10() {
 
 
 function scene20() {
-  subtitles.textContent = 'и систему координат'
+  subtitles.textContent = 'На одной чаше арбуз'
   display.clear()
 
-  const plane = display.plane(Sh.coordList(1, 1, 3.5))
-    .opacity(0)
-  const uc = D.uc()
-    .radius(50)
-    .center(53, 48)
 
   const k = Anim.ease()
 
@@ -74,7 +60,7 @@ function scene20() {
 
 // TODO Scenes 30
 function scene30() {
-  subtitles.textContent = 'Как считаешь, куда лучше его поместить?'
+  subtitles.textContent = 'На другой три гирьки по пять килограмм'
   display.clear()
   const plane = display.plane(Sh.coordList(0, 0, 3.5))
   const uc = D.uc()
@@ -159,4 +145,4 @@ function scene40() {
 }
 
 
-scene10()
+// scene10()

@@ -23,14 +23,13 @@ body {
 	font-weight: normal;
 	font-style: normal;
 }
-	;
 	color: white;
 	background-color: #000000;
 	font-family: "DejaVu Serif";
 }
 text {
 	font-family: "DejaVu Sans";
-	font-size: 0.33em;
+	/* font-size: 0.33em; */
 }
 a:link { color: dodgerblue; }
 a:visited {color: violet;}
