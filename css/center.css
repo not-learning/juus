@@ -5,12 +5,15 @@ html, body {
 body {
 	display: flex;
 	flex-direction: column;
-	align-items: stretch;
+	align-items: center;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content: center;
 }
 body > * {
 	flex: 0;
 }
-svg {
+svg, canvas {
 	flex: 1;
 	margin: 0;
 }
