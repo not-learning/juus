@@ -95,52 +95,80 @@ function initBuffers() {
   gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf)
   const d = -2
   let vrtx = [
-  -1.0,  0.0,  0,
-  -0.1, -0.1,  0,
-  -0.1, -0.1,  0,
-   0.1, -0.1,  0,
-   0.1, -0.1,  0,
-   0.1,  0.1,  0,
-   0.1,  0.1,  0,
-  -0.1,  0.1,  0,
-  -0.1,  0.1,  0,
-  -0.1, -0.1,  0,
-   0.1,  0.1,  0,
-   1.0,  0.0,  0,
+    -1, -1, -1,
+     1, -1, -1,
+     1, -1, -1,
+     1,  1, -1,
+     1,  1, -1,
+    -1,  1, -1,
+    -1,  1, -1,
+    -1, -1, -1,
 
-  -0.1, -0.1,  d,
-   0.1, -0.1,  d,
-   0.1, -0.1,  d,
-   0.1,  0.1,  d,
-   0.1,  0.1,  d,
-  -0.1,  0.1,  d,
-  -0.1,  0.1,  d,
-  -0.1, -0.1,  d,
+    // -1, -1,  0,
+    //  1, -1,  0,
+    //  1, -1,  0,
+    //  1,  1,  0,
+    //  1,  1,  0,
+    // -1,  1,  0,
+    // -1,  1,  0,
+    // -1, -1,  0,
 
-  -0.1, -0.1,  0,
-  -0.1, -0.1,  d,
-   0.1, -0.1,  0,
-   0.1, -0.1,  d,
-   0.1,  0.1,  0,
-   0.1,  0.1,  d,
-  -0.1,  0.1,  0,
-  -0.1,  0.1,  d,
-]
+    -1, -1,  1,
+     1, -1,  1,
+     1, -1,  1,
+     1,  1,  1,
+     1,  1,  1,
+    -1,  1,  1,
+    -1,  1,  1,
+    -1, -1,  1,
+    
+    -1, -1, -1,
+    -1, -1,  1,
+     1, -1, -1,
+     1, -1,  1,
+     1,  1, -1,
+     1,  1,  1,
+    -1,  1, -1,
+    -1,  1,  1,
+  ]
+
+  let vrtx2 = []
+  vrtx.forEach((v, i) => vrtx2[i] = v * 0.5)
+  let conn = [
+    -1,   -1,   -1,
+    -0.5, -0.5, -0.5,
+    -1,   -1,    1,
+    -0.5, -0.5,  0.5,
+    -1,    1,   -1,
+    -0.5,  0.5, -0.5,
+    -1,    1,    1,
+    -0.5,  0.5,  0.5,
+     1,   -1,   -1,
+     0.5, -0.5, -0.5,
+     1,   -1,    1,
+     0.5, -0.5,  0.5,
+     1,    1,   -1,
+     0.5,  0.5, -0.5,
+     1,    1,    1,
+     0.5,  0.5,  0.5,
+  ]
+  vrtx = [...vrtx, ...vrtx2, ...conn]
+
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vrtx), gl.STATIC_DRAW)
   lineBuf.itemSize = 3
-  lineBuf.numItems = 28
+  lineBuf.numItems = 64
 
-  squareBuf = gl.createBuffer()
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareBuf)
-  vrtx = [
-    1.0,  1.0,  0.0,
-   -1.0,  1.0,  0.0,
-    1.0, -1.0,  0.0,
-   -1.0, -1.0,  0.0,
-  ]
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vrtx), gl.STATIC_DRAW)
-  squareBuf.itemSize = 3
-  squareBuf.numItems = 4
+  // squareBuf = gl.createBuffer()
+  // gl.bindBuffer(gl.ARRAY_BUFFER, squareBuf)
+  // vrtx = [
+  //   1.0,  1.0,  0.0,
+  //  -1.0,  1.0,  0.0,
+  //   1.0, -1.0,  0.0,
+  //  -1.0, -1.0,  0.0,
+  // ]
+  // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vrtx), gl.STATIC_DRAW)
+  // squareBuf.itemSize = 3
+  // squareBuf.numItems = 4
 }
 
 
@@ -173,9 +201,9 @@ const m4 = {
 function draw() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-  const matP = m4.perspective(Math.PI / 4, gl.viewportWidth / gl.viewportHeight, 0.01, 100)
+  const matP = m4.perspective(Math.PI / 2, gl.viewportWidth / gl.viewportHeight, 0.01, 100)
 
-  let matT = m4.translate(0, 0, -2.7)
+  let matT = m4.translate(0.7, 0.15, -2.3)
   gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf)
   gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, lineBuf.itemSize, gl.FLOAT, false, 0, 0)
   m4.setMatrixUniforms(matP, matT)
